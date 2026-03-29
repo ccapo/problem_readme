@@ -8,18 +8,26 @@ def main():
     parser.add_argument("limit", type=float, help="Sum limit")
     args = parser.parse_args()
     
+    # Parse input from STDIN
+    values = []
+    for line in sys.stdin:
+        value = float(line.strip())
+        values.append(value)
+    
     # Compute sum
-    compute(args.threshold, args.limit)
+    compute(args.threshold, args.limit, values)
 
-def compute(threshold, limit):
+def compute(threshold, limit, values):
     # Sum of input values
     vsum = 0.0
 
-    # Parse input from STDIN
-    for line in sys.stdin:
-        value = float(line.strip())
+    # Iterate over input values
+    for value in values:
+        # Transform value and update sum
         delta = min(limit - vsum, max(0.0, value - threshold))
         vsum += delta
+        
+        # Print transformed value
         print(f"{delta:.1f}")
 
     # Print final sum
