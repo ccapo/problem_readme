@@ -2,16 +2,14 @@ FROM golang:1.26-alpine AS builder
 
 WORKDIR /app
 
-COPY go.mod ./
+COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o compute .
+RUN go test -v ./...
 
 FROM scratch
 
-COPY --from=builder /app/compute /
-
-ENTRYPOINT ["/compute"]
-CMD ["0.0", "0.0"]
+COPY --from=builder /app/compute /bin/compute
