@@ -16,11 +16,22 @@ def main():
         values.append(value)
     
     # Compute sum
-    compute(args.threshold, args.limit, values)
+    vsum, deltas = compute(args.threshold, args.limit, values)
+    
+    # Iterate over transformed inputs
+    for delta in deltas:
+        # Print transformed value
+        print(f"{delta:.1f}")
+    
+    # Print final sum
+    print(f"{vsum:.1f}")
 
 def compute(threshold, limit, values):
     # Sum of input values
     vsum = 0.0
+    
+    # Output values
+    deltas = []
 
     # Iterate over input values
     for value in values:
@@ -28,11 +39,10 @@ def compute(threshold, limit, values):
         delta = min(limit - vsum, max(0.0, value - threshold))
         vsum += delta
         
-        # Print transformed value
-        print(f"{delta:.1f}")
+        # Store transformed value
+        deltas.append(delta)
 
-    # Print final sum
-    print(f"{vsum:.1f}")
+    return vsum, deltas
 
 if __name__ == "__main__":
     main()
