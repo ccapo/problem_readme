@@ -32,18 +32,28 @@ func main() {
 		return
 	}
 
-	// Parse the command-line arguments
+	// Parse threshold argument
 	threshold_str := os.Args[1]
 	threshold, err := strconv.ParseFloat(threshold_str, 64)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
 		return
 	}
+	if threshold < 0.0 || threshold > 1000000000.0 {
+	  fmt.Fprintln(os.Stderr, "error: threshold should be between 0.0 and 1000000000.0: ", threshold)
+	  return
+	}
+	
+	// Parse limit argument
 	limit_str := os.Args[2]
 	limit, err := strconv.ParseFloat(limit_str, 64)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
 		return
+	}
+	if limit < 0.0 || limit > 1000000000.0 {
+	  fmt.Fprintln(os.Stderr, "error: limit should be between 0.0 and 1000000000.0: ", limit)
+	  return
 	}
 
 	// Parse values from STDIN
@@ -58,8 +68,10 @@ func main() {
 			return
 		}
 
-		// Transform values and update sum
-		values = append(values, value)
+    // If in valid range, store input value
+		if value >= 0.0 && value <= 1000000000.0 {
+		  values = append(values, value)
+		}
 	}
 
 	// Compute the sum

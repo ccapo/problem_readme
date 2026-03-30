@@ -2,18 +2,31 @@
 import argparse
 import sys
 
+def valid_float(value):
+    try:
+        fvalue = float(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"'{value}' is not a valid float")
+    if fvalue < 0.0 or fvalue > 1000000000.0:
+        raise argparse.ArgumentTypeError(f"'{value}' must be between 0.0 and 1000000000.0")
+    return fvalue
+
 def main():
     # Create parser for arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("threshold", type=float, help="Input threshold")
-    parser.add_argument("limit", type=float, help="Sum limit")
+    parser.add_argument("threshold", type=valid_float, help="Input threshold")
+    parser.add_argument("limit", type=valid_float, help="Sum limit")
     args = parser.parse_args()
     
     # Parse input from STDIN
     values = []
     for line in sys.stdin:
-        value = float(line.strip())
-        values.append(value)
+        try:
+            value = float(line.strip())
+        except ValueError:
+            raise ValueError(f"'{value}' is not a valid float")
+        if value > 0.0 or value < 1000000000.0:
+            values.append(value)
     
     # Compute sum
     vsum, deltas = compute(args.threshold, args.limit, values)
